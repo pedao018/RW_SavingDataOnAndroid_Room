@@ -30,37 +30,21 @@
  *
  */
 
-package com.raywenderlich.android.droidquiz.view
+package com.raywenderlich.android.droidquiz
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.raywenderlich.android.droidquiz.R
-import com.raywenderlich.android.droidquiz.databinding.ActivityResultBinding
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
-class ResultActivity : AppCompatActivity() {
-
-  private lateinit var binding: ActivityResultBinding
-
-  private val score by lazy { intent.extras?.getInt(QuestionActivity.SCORE) }
-  private val numberOfQuestions by lazy { intent.extras?.getInt(QuestionActivity.NUMBER_OF_QUESTIONS) }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    binding = ActivityResultBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
-    binding.playButton.setOnClickListener { playAgain() }
-    binding.scoreTextView.text = String.format(getString(R.string.score_message), score, numberOfQuestions)
+class ViewModelFactory<T>(val creator: () -> T) : ViewModelProvider.Factory {
+  override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    return creator() as T
   }
+}
 
-  private fun playAgain() {
-    val intent = Intent(this, MainActivity::class.java).apply {
-      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-    }
-
-    startActivity(intent)
-  }
+inline fun <reified T : ViewModel> FragmentActivity.getViewModel(noinline creator: (() -> T)? = null): T {
+  return if (creator == null)
+    ViewModelProvider(this).get(T::class.java)
+  else
+    ViewModelProvider(this, ViewModelFactory(creator)).get(T::class.java)
 }

@@ -1,5 +1,6 @@
 package com.raywenderlich.android.droidquiz.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.raywenderlich.android.droidquiz.data.model.Answer
 import com.raywenderlich.android.droidquiz.data.model.Question
@@ -33,5 +34,13 @@ interface QuizDao {
     * */
     @Query("SELECT * FROM question")
     fun getQuestionAndAllAnswers(): List<QuestionAndAllAnswers>
+
+
+    @Query("SELECT * FROM question ORDER BY question_id")
+    fun getAllQuestions_Live(): LiveData<List<Question>>
+
+    @Transaction
+    @Query("SELECT * FROM question")
+    fun getQuestionAndAllAnswers_Live(): LiveData<List<QuestionAndAllAnswers>>
 
 }

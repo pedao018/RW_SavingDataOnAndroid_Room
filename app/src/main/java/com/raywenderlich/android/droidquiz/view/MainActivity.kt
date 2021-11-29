@@ -35,13 +35,20 @@ package com.raywenderlich.android.droidquiz.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.droidquiz.R
+import com.raywenderlich.android.droidquiz.data.Repository
 import com.raywenderlich.android.droidquiz.databinding.ActivityMainBinding
+import com.raywenderlich.android.droidquiz.getViewModel
+import com.raywenderlich.android.droidquiz.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityMainBinding
+
+  private val viewModel: MainViewModel by lazy { getViewModel { MainViewModel(Repository()) } }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -57,8 +64,22 @@ class MainActivity : AppCompatActivity() {
     startActivity(intent)
   }
 
+  private fun prepopulateQuestions() = viewModel.prepopulateQuestions()
+
+  private fun clearQuestions() = viewModel.clearQuestions()
+
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
     menuInflater.inflate(R.menu.main_menu, menu)
     return super.onCreateOptionsMenu(menu)
   }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.prepopulate -> prepopulateQuestions()
+      R.id.clear -> clearQuestions()
+      else -> Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+    }
+    return super.onOptionsItemSelected(item)
+  }
 }
+
