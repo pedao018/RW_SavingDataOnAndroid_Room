@@ -10,7 +10,8 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme"
-      tools:ignore="AllowBackup">
+      tools:ignore="AllowBackup"
+      android:name=".QuizApplication">
     <activity android:name=".view.MainActivity"/>
     <activity android:name=".view.ResultActivity"/>
     <activity
