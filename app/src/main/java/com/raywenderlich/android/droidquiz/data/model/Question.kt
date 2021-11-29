@@ -10,5 +10,6 @@ data class Question(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "question_id")
     var questionId: Int,
-    val text: String
+    val text: String,
+    val challengeLevel: String = "0"
 )
